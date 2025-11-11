@@ -1,133 +1,97 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>DeTech | Cost vs. Profit Margin Calculator</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DeTech CryoCapture™ ROI Savings Calculator</title>
 
-  <!-- ✅ Social Media Preview -->
-  <meta property="og:title" content="DeTech | Cost vs. Profit Margin Calculator">
-  <meta property="og:description" content="Easily model cost, profit margins, and subscription terms with this lightweight DeTech tool.">
-  <meta property="og:image" content="https://your-username.github.io/your-repo-name/logo.png">
-  <meta property="og:url" content="https://your-username.github.io/your-repo-name/">
+  <!-- ✅ Social Media Preview (Open Graph & Twitter) -->
+  <meta property="og:title" content="DeTech CryoCapture™ ROI Savings Calculator">
+  <meta property="og:description" content="Easily calculate your potential ROI and savings with DeTech CryoCapture™ automated liquid nitrogen monitoring.">
+  <meta property="og:image" content="https://frankp36.github.io/logo.png">
+  <meta property="og:url" content="https://frankp36.github.io/">
   <meta name="twitter:card" content="summary_large_image">
 
-  <!-- ✅ Favicon -->
+  <!-- ✅ Favicon (Browser tab icon) -->
   <link rel="icon" type="image/png" href="logo.png">
 
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            primary: '#5D5CDE',
+            'primary-dark': '#4a49c5',
+          }
+        }
+      }
+    }
+  </script>
+
   <style>
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #f4f6f8;
-      margin: 0;
-      padding: 20px;
-      color: #333;
-    }
-    .container {
-      max-width: 650px;
-      margin: 30px auto;
-      background-color: #fff;
-      border-radius: 15px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-      padding: 30px;
-    }
-    h1 {
-      text-align: center;
-      color: #0057b8;
-    }
-    label {
-      font-weight: 600;
-      display: block;
-      margin-top: 15px;
-      margin-bottom: 5px;
-    }
-    input, select {
-      width: 100%;
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      box-sizing: border-box;
-      margin-bottom: 10px;
-    }
-    button {
-      background-color: #0057b8;
-      color: #fff;
-      border: none;
-      border-radius: 8px;
-      padding: 12px;
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      background: transparent;
       cursor: pointer;
-      width: 100%;
-      font-size: 16px;
-      font-weight: bold;
     }
-    button:hover {
-      background-color: #0041a1;
+
+    input[type="range"]::-webkit-slider-track {
+      background: #e5e7eb;
+      height: 0.5rem;
+      border-radius: 0.25rem;
     }
-    .result {
-      background-color: #e9f5ff;
-      border-left: 5px solid #0057b8;
-      padding: 15px;
-      border-radius: 10px;
-      margin-top: 20px;
-      font-size: 16px;
-      line-height: 1.6;
+
+    .dark input[type="range"]::-webkit-slider-track {
+      background: #374151;
     }
-    img.logo {
-      display: block;
-      margin: 0 auto 15px auto;
-      width: 120px;
-      height: auto;
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      background: #5D5CDE;
+      height: 1.25rem;
+      width: 1.25rem;
+      border-radius: 50%;
+      margin-top: -0.375rem;
+      transition: all 0.2s;
+    }
+
+    input[type="range"]::-webkit-slider-thumb:hover {
+      background: #4a49c5;
+      transform: scale(1.1);
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .result-card {
+      animation: slideIn 0.5s ease-out;
     }
   </style>
 </head>
-<body>
-  <div class="container">
-    <!-- ✅ Company Logo -->
-    <img src="logo.png" alt="DeTech Logo" class="logo">
 
-    <h1>Cost vs. Profit Margin Calculator</h1>
-    <label for="hardwareCost">Hardware Cost per Tank ($):</label>
-    <input type="number" id="hardwareCost" placeholder="e.g. 600" />
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-200">
+  <div class="min-h-screen py-8 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-5xl mx-auto">
 
-    <label for="travelCost">Onboarding Travel Cost per Tank ($):</label>
-    <input type="number" id="travelCost" placeholder="e.g. 200" />
+      <!-- ✅ Header with Logo -->
+      <div class="text-center mb-8">
+        <img src="logo.png" alt="DeTech Logo" class="mx-auto mb-4 w-32 h-auto rounded-lg shadow-md">
+        <h1 class="text-3xl sm:text-4xl font-bold text-primary mb-2">DeTech CryoCapture™</h1>
+        <p class="text-xl sm:text-2xl font-semibold text-gray-700 dark:text-gray-300">ROI Savings Calculator</p>
+        <p class="text-sm sm:text-base text-gray-600 dark:text-gray-400 mt-2">Calculate your potential savings with automated liquid nitrogen tank monitoring</p>
+      </div>
 
-    <label for="term">Contract Term:</label>
-    <select id="term">
-      <option value="12">12 Months</option>
-      <option value="24">24 Months</option>
-      <option value="36">36 Months</option>
-    </select>
-
-    <label for="targetProfit">Target Profit Margin (%):</label>
-    <input type="number" id="targetProfit" placeholder="e.g. 30" />
-
-    <button onclick="calculate()">Calculate Monthly Subscription</button>
-
-    <div id="result" class="result" style="display:none;"></div>
-  </div>
-
-  <script>
-    function calculate() {
-      const hardwareCost = parseFloat(document.getElementById("hardwareCost").value) || 0;
-      const travelCost = parseFloat(document.getElementById("travelCost").value) || 0;
-      const term = parseInt(document.getElementById("term").value);
-      const targetProfit = parseFloat(document.getElementById("targetProfit").value) || 0;
-
-      const totalCost = hardwareCost + travelCost;
-      const profit = totalCost * (targetProfit / 100);
-      const totalWithProfit = totalCost + profit;
-      const monthly = totalWithProfit / term;
-
-      const resultDiv = document.getElementById("result");
-      resultDiv.style.display = "block";
-      resultDiv.innerHTML = `
-        <strong>Total Cost (Hardware + Travel):</strong> $${totalCost.toFixed(2)}<br>
-        <strong>Profit Added (${targetProfit}%):</strong> $${profit.toFixed(2)}<br>
-        <strong>Total with Profit:</strong> $${totalWithProfit.toFixed(2)}<br>
-        <strong>Monthly Subscription:</strong> $${monthly.toFixed(2)} per month for ${term} months.
-      `;
-    }
-  </script>
-</body>
-</html>
+      <!-- 💡 (Your calculator content continues below this) -->
+      <!-- Keep the rest of your HTML + JavaScript as-is -->
