@@ -1,478 +1,133 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>DeTech | Cost vs. Profit Margin Calculator</title>
-<style>
-  :root{
-    --bg:#0f172a;      /* slate-900 */
-    --panel:#111827;   /* gray-900 */
-    --muted:#94a3b8;   /* slate-400 */
-    --text:#e5e7eb;    /* gray-200 */
-    --accent:#22c55e;  /* green-500 */
-    --accent-2:#38bdf8;/* sky-400 */
-    --warn:#f59e0b;    /* amber-500 */
-    --danger:#ef4444;  /* red-500 */
-    --card:#0b1220;
-    --input:#0b1020;
-    --border:#1f2a44;
-  }
-  *{box-sizing:border-box}
-  body{
-    margin:0;
-    font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, "Helvetica Neue", Arial, "Apple Color Emoji","Segoe UI Emoji";
-    background: radial-gradient(1200px 800px at 80% -10%, #102340 0%, #0b1220 40%, #070c16 100%);
-    color: var(--text);
-  }
-  header{
-    padding: 24px 16px 8px;
-    text-align:center;
-  }
-  h1{
-    margin:0;
-    font-size: clamp(20px, 4vw, 28px);
-    letter-spacing: .2px;
-  }
-  p.sub{
-    margin:.35rem 0 0;
-    color: var(--muted);
-    font-size: 14px;
-  }
-  .container{
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 16px;
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 16px;
-  }
-  @media (min-width: 980px){
-    .container{
-      grid-template-columns: 1.05fr .95fr;
-      align-items: start;
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DeTech | Cost vs. Profit Margin Calculator</title>
+
+  <!-- ✅ Social Media Preview -->
+  <meta property="og:title" content="DeTech | Cost vs. Profit Margin Calculator">
+  <meta property="og:description" content="Easily model cost, profit margins, and subscription terms with this lightweight DeTech tool.">
+  <meta property="og:image" content="https://your-username.github.io/your-repo-name/logo.png">
+  <meta property="og:url" content="https://your-username.github.io/your-repo-name/">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <!-- ✅ Favicon -->
+  <link rel="icon" type="image/png" href="logo.png">
+
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f6f8;
+      margin: 0;
+      padding: 20px;
+      color: #333;
     }
-  }
-  .card{
-    background: linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,0));
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 16px;
-    box-shadow: 0 10px 30px rgba(0,0,0,.25);
-  }
-  .section-title{
-    font-weight: 700;
-    font-size: 16px;
-    margin-bottom: 12px;
-    color: #dbeafe;
-  }
-  .grid{
-    display: grid;
-    gap: 10px;
-  }
-  .grid-2{
-    grid-template-columns: 1fr 1fr;
-  }
-  .row{
-    display:flex;
-    gap:10px;
-  }
-  label{
-    font-size: 12px;
-    color: var(--muted);
-    display:block;
-    margin-bottom:6px;
-  }
-  input[type="number"], select{
-    width: 100%;
-    padding: 10px 12px;
-    border-radius: 10px;
-    border: 1px solid var(--border);
-    background: var(--input);
-    color: var(--text);
-    outline: none;
-    transition: border-color .15s ease, box-shadow .15s ease;
-  }
-  input[type="number"]:focus, select:focus{
-    border-color: var(--accent-2);
-    box-shadow: 0 0 0 3px rgba(56,189,248,.15);
-  }
-  .inline{
-    display:flex; align-items:center; gap:10px;
-  }
-  .suffix{
-    padding: 10px 12px;
-    background: #0a0f1d;
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    color: var(--muted);
-    font-size: 12px;
-    white-space: nowrap;
-  }
-  .help{
-    color: var(--muted);
-    font-size: 12px;
-    margin-top:4px;
-  }
-  .btn{
-    background: linear-gradient(180deg, var(--accent), #16a34a);
-    color: #06200f;
-    font-weight: 700;
-    border: none;
-    padding: 10px 14px;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: transform .06s ease, filter .2s ease;
-  }
-  .btn:active{ transform: translateY(1px) }
-  .btn.secondary{
-    background: #0a0f1d;
-    color: #d1d5db;
-    border: 1px solid var(--border);
-  }
-  .summary{
-    display:grid; gap:10px;
-  }
-  .kpi{
-    background: linear-gradient(180deg, rgba(56,189,248,.08), rgba(34,197,94,.05));
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 12px;
-  }
-  .kpi h3{
-    margin:0 0 4px;
-    font-size:14px; color:#c7d2fe;
-  }
-  .kpi .value{
-    font-size: clamp(18px, 4vw, 28px);
-    font-weight: 800;
-    letter-spacing:.3px;
-  }
-  .kpi small{
-    display:block; color: var(--muted); margin-top:4px;
-  }
-  .divider{
-    height:1px; background: var(--border); margin: 10px 0;
-  }
-  .tag{
-    display:inline-flex; align-items:center; gap:6px;
-    background:#091227;
-    border: 1px solid var(--border);
-    padding:6px 10px; border-radius:999px; color:#cbd5e1;
-    font-size:12px;
-  }
-  .tag .dot{
-    width:8px; height:8px; border-radius:50%; background: var(--accent);
-  }
-  .row-end{
-    display:flex; gap:10px; justify-content:flex-end; flex-wrap: wrap;
-  }
-  .muted{
-    color: var(--muted);
-  }
-  .note{
-    font-size: 12px; color: var(--muted);
-  }
-  .warning{
-    color: var(--warn);
-  }
-  .danger{
-    color: var(--danger);
-  }
-  .flex{
-    display:flex; gap:10px; flex-wrap:wrap; align-items:center;
-  }
-  .small{
-    font-size:12px;
-  }
-</style>
+    .container {
+      max-width: 650px;
+      margin: 30px auto;
+      background-color: #fff;
+      border-radius: 15px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      padding: 30px;
+    }
+    h1 {
+      text-align: center;
+      color: #0057b8;
+    }
+    label {
+      font-weight: 600;
+      display: block;
+      margin-top: 15px;
+      margin-bottom: 5px;
+    }
+    input, select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      box-sizing: border-box;
+      margin-bottom: 10px;
+    }
+    button {
+      background-color: #0057b8;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 12px;
+      cursor: pointer;
+      width: 100%;
+      font-size: 16px;
+      font-weight: bold;
+    }
+    button:hover {
+      background-color: #0041a1;
+    }
+    .result {
+      background-color: #e9f5ff;
+      border-left: 5px solid #0057b8;
+      padding: 15px;
+      border-radius: 10px;
+      margin-top: 20px;
+      font-size: 16px;
+      line-height: 1.6;
+    }
+    img.logo {
+      display: block;
+      margin: 0 auto 15px auto;
+      width: 120px;
+      height: auto;
+    }
+  </style>
 </head>
 <body>
-<header>
-  <h1>DeTech — Cost vs. Profit Margin Calculator</h1>
-  <p class="sub">Model hardware cost, onboarding travel cost per tank, and monthly subscription by contract term.</p>
-</header>
+  <div class="container">
+    <!-- ✅ Company Logo -->
+    <img src="logo.png" alt="DeTech Logo" class="logo">
 
-<div class="container">
-  <!-- Inputs -->
-  <section class="card">
-    <div class="section-title">Inputs</div>
-    <div class="grid">
-      <div class="grid grid-2">
-        <div>
-          <label>Hardware Cost (one-time)</label>
-          <div class="inline">
-            <span class="suffix">$</span>
-            <input id="hardwareCost" type="number" min="0" step="1" value="950" />
-          </div>
-          <div class="help">Default from your note: $950 per hardware unit.</div>
-        </div>
+    <h1>Cost vs. Profit Margin Calculator</h1>
+    <label for="hardwareCost">Hardware Cost per Tank ($):</label>
+    <input type="number" id="hardwareCost" placeholder="e.g. 600" />
 
-        <div>
-          <label>Number of Tanks (units deployed)</label>
-          <input id="numTanks" type="number" min="1" step="1" value="1" />
-          <div class="help">Used to scale travel cost and monthly revenue if billed per tank.</div>
-        </div>
-      </div>
+    <label for="travelCost">Onboarding Travel Cost per Tank ($):</label>
+    <input type="number" id="travelCost" placeholder="e.g. 200" />
 
-      <div class="grid grid-2">
-        <div>
-          <label>Onboarding Travel Cost per Tank</label>
-          <div class="inline">
-            <span class="suffix">$</span>
-            <input id="travelPerTank" type="number" min="0" step="1" value="750" />
-          </div>
-          <div class="help">Range reference: $750 to $2200 per tank.</div>
-        </div>
+    <label for="term">Contract Term:</label>
+    <select id="term">
+      <option value="12">12 Months</option>
+      <option value="24">24 Months</option>
+      <option value="36">36 Months</option>
+    </select>
 
-        <div>
-          <label>Bill Monthly Per Tank?</label>
-          <select id="billPerTank">
-            <option value="yes" selected>Yes (monthly fee per tank)</option>
-            <option value="no">No (monthly fee per facility)</option>
-          </select>
-          <div class="help">If "No", monthly fee is charged once per facility regardless of tank count.</div>
-        </div>
-      </div>
+    <label for="targetProfit">Target Profit Margin (%):</label>
+    <input type="number" id="targetProfit" placeholder="e.g. 30" />
 
-      <div>
-        <label>Contract Term</label>
-        <div class="row">
-          <button class="btn secondary" data-term="1">1 Year ($175/mo)</button>
-          <button class="btn secondary" data-term="3">3 Years ($165/mo)</button>
-          <button class="btn secondary" data-term="5">5 Years ($145/mo)</button>
-        </div>
-        <div class="help">Click to choose. You can override the monthly rate below if needed.</div>
-      </div>
+    <button onclick="calculate()">Calculate Monthly Subscription</button>
 
-      <div class="grid grid-2">
-        <div>
-          <label>Monthly Subscription Rate</label>
-          <div class="inline">
-            <span class="suffix">$</span>
-            <input id="monthlyRate" type="number" min="0" step="1" value="175" />
-          </div>
-          <div class="help">Defaults: $175 (1yr), $165 (3yr), $145 (5yr).</div>
-        </div>
-        <div>
-          <label>Contract Length (months)</label>
-          <input id="contractMonths" type="number" min="1" step="1" value="12" />
-          <div class="help">1yr=12, 3yr=36, 5yr=60.</div>
-        </div>
-      </div>
+    <div id="result" class="result" style="display:none;"></div>
+  </div>
 
-      <details>
-        <summary class="tag"><span class="dot"></span> Optional Advanced Costs</summary>
-        <div class="grid grid-2" style="margin-top:10px">
-          <div>
-            <label>Ongoing Monthly Cost to Serve (per tank)</label>
-            <div class="inline">
-              <span class="suffix">$</span>
-              <input id="cogsMonthlyPerTank" type="number" min="0" step="1" value="0" />
-            </div>
-            <div class="help">Your internal support/telemetry costs per tank per month, if any.</div>
-          </div>
-          <div>
-            <label>One-time Misc. Costs (per facility)</label>
-            <div class="inline">
-              <span class="suffix">$</span>
-              <input id="miscOnetime" type="number" min="0" step="1" value="0" />
-            </div>
-            <div class="help">Training, shipping, install materials, etc.</div>
-          </div>
-        </div>
-      </details>
+  <script>
+    function calculate() {
+      const hardwareCost = parseFloat(document.getElementById("hardwareCost").value) || 0;
+      const travelCost = parseFloat(document.getElementById("travelCost").value) || 0;
+      const term = parseInt(document.getElementById("term").value);
+      const targetProfit = parseFloat(document.getElementById("targetProfit").value) || 0;
 
-      <div class="row-end">
-        <button id="presetLow" class="btn secondary">Preset: Low Travel ($750)</button>
-        <button id="presetHigh" class="btn secondary">Preset: High Travel ($2200)</button>
-        <button id="reset" class="btn secondary">Reset</button>
-        <button id="calc" class="btn">Calculate</button>
-      </div>
-    </div>
-  </section>
+      const totalCost = hardwareCost + travelCost;
+      const profit = totalCost * (targetProfit / 100);
+      const totalWithProfit = totalCost + profit;
+      const monthly = totalWithProfit / term;
 
-  <!-- Outputs -->
-  <section class="card">
-    <div class="section-title">Results</div>
-    <div class="summary">
-      <div class="kpi">
-        <h3>Total Revenue (Contract Term)</h3>
-        <div class="value" id="revTotal">$0</div>
-        <small id="revBreakdown" class="muted"></small>
-      </div>
-
-      <div class="kpi">
-        <h3>Total Costs (One-time + Ongoing)</h3>
-        <div class="value" id="costTotal">$0</div>
-        <small id="costBreakdown" class="muted"></small>
-      </div>
-
-      <div class="kpi">
-        <h3>Total Profit</h3>
-        <div class="value" id="profitTotal">$0</div>
-        <small id="profitNote" class="muted"></small>
-      </div>
-
-      <div class="kpi">
-        <h3>Gross Margin</h3>
-        <div class="value" id="marginPct">0%</div>
-        <small class="muted">Profit ÷ Revenue</small>
-      </div>
-
-      <div class="divider"></div>
-
-      <div class="grid grid-2">
-        <div class="kpi">
-          <h3>Monthly Recurring Revenue</h3>
-          <div class="value" id="mrr">$0</div>
-          <small id="mrrNote" class="muted"></small>
-        </div>
-        <div class="kpi">
-          <h3>Monthly Profit</h3>
-          <div class="value" id="pm">$0</div>
-          <small id="pmNote" class="muted"></small>
-        </div>
-      </div>
-
-      <div class="divider"></div>
-
-      <div class="flex small">
-        <span class="tag"><span class="dot"></span> Breakeven Month: <strong id="breakeven">—</strong></span>
-        <span class="tag"><span class="dot" style="background:var(--accent-2)"></span> One-time CAC: <strong id="cac">$0</strong></span>
-        <span class="tag"><span class="dot" style="background:var(--warn)"></span> Notes: <span id="notes" class="muted" style="margin-left:6px">Choose a preset or calculate.</span></span>
-      </div>
-
-      <p class="note">Assumes one hardware unit per facility by default. If you deploy a unit per tank, increase hardware cost proportionally or use "Number of Tanks" to scale monthly revenue and travel cost only.</p>
-    </div>
-  </section>
-</div>
-
-<script>
-  const $ = (id)=>document.getElementById(id);
-
-  const termButtons = document.querySelectorAll('button[data-term]');
-  termButtons.forEach(btn=>{
-    btn.addEventListener('click', ()=>{
-      const years = parseInt(btn.dataset.term,10);
-      if(years===1){ $('monthlyRate').value = 175; $('contractMonths').value = 12; }
-      if(years===3){ $('monthlyRate').value = 165; $('contractMonths').value = 36; }
-      if(years===5){ $('monthlyRate').value = 145; $('contractMonths').value = 60; }
-      pulse(btn);
-      compute();
-    });
-  });
-
-  $('presetLow').addEventListener('click', ()=>{ $('travelPerTank').value = 750; pulse($('presetLow')); compute(); });
-  $('presetHigh').addEventListener('click', ()=>{ $('travelPerTank').value = 2200; pulse($('presetHigh')); compute(); });
-  $('reset').addEventListener('click', ()=>{
-    $('hardwareCost').value = 950;
-    $('numTanks').value = 1;
-    $('travelPerTank').value = 750;
-    $('billPerTank').value = 'yes';
-    $('monthlyRate').value = 175;
-    $('contractMonths').value = 12;
-    $('cogsMonthlyPerTank').value = 0;
-    $('miscOnetime').value = 0;
-    compute();
-  });
-  $('calc').addEventListener('click', compute);
-
-  const fmt = (n)=> n.toLocaleString(undefined,{ style:'currency', currency:'USD', maximumFractionDigits:0 });
-  const fmt2 = (n)=> n.toLocaleString(undefined,{ style:'currency', currency:'USD', maximumFractionDigits:2 });
-  const pct = (n)=> (isFinite(n)? (n*100).toFixed(1) : '0.0')+'%';
-
-  function compute(){
-    const hardwareCost = +$('hardwareCost').value || 0;      // one-time, per facility (default)
-    const numTanks     = Math.max(1, Math.floor(+$('numTanks').value || 0));
-    const travelPerTank= +$('travelPerTank').value || 0;     // one-time, scales with tanks
-    const billPerTank  = $('billPerTank').value === 'yes';
-
-    const monthlyRate  = +$('monthlyRate').value || 0;
-    const contractMonths = Math.max(1, Math.floor(+$('contractMonths').value || 0));
-
-    const cogsMonthlyPerTank = +$('cogsMonthlyPerTank').value || 0; // optional
-    const miscOnetime = +$('miscOnetime').value || 0;
-
-    // Revenue
-    const mrr = billPerTank ? monthlyRate * numTanks : monthlyRate;
-    const revenueTotal = mrr * contractMonths;
-
-    // Costs
-    const oneTimeTravel = travelPerTank * numTanks;
-    const oneTimeCosts = hardwareCost + oneTimeTravel + miscOnetime;
-
-    const ongoingMonthlyCost = cogsMonthlyPerTank * (billPerTank ? numTanks : 1);
-    const ongoingTotal = ongoingMonthlyCost * contractMonths;
-
-    const totalCosts = oneTimeCosts + ongoingTotal;
-
-    // Profit
-    const totalProfit = revenueTotal - totalCosts;
-    const grossMargin = revenueTotal>0 ? (totalProfit / revenueTotal) : 0;
-
-    // Monthly profit approximation (MRR - ongoing monthly costs), excluding one-time amortization
-    const monthlyProfit = mrr - ongoingMonthlyCost;
-
-    // Breakeven month: months to recover one-time costs via monthly profit
-    let breakeven = '—';
-    if (monthlyProfit > 0){
-      const monthsToBE = Math.ceil(oneTimeCosts / monthlyProfit);
-      breakeven = monthsToBE + (monthsToBE===1 ? ' month' : ' months');
-    } else if (monthlyProfit === 0 && oneTimeCosts>0){
-      breakeven = 'Never (no monthly contribution)';
-    } else if (oneTimeCosts===0){
-      breakeven = '0 (no one-time costs)';
+      const resultDiv = document.getElementById("result");
+      resultDiv.style.display = "block";
+      resultDiv.innerHTML = `
+        <strong>Total Cost (Hardware + Travel):</strong> $${totalCost.toFixed(2)}<br>
+        <strong>Profit Added (${targetProfit}%):</strong> $${profit.toFixed(2)}<br>
+        <strong>Total with Profit:</strong> $${totalWithProfit.toFixed(2)}<br>
+        <strong>Monthly Subscription:</strong> $${monthly.toFixed(2)} per month for ${term} months.
+      `;
     }
-
-    // Update UI
-    $('revTotal').textContent = fmt(revenueTotal);
-    $('revBreakdown').textContent = `${fmt(mrr)} per month × ${contractMonths} months`;
-
-    $('costTotal').textContent = fmt(totalCosts);
-    $('costBreakdown').textContent = `One-time: ${fmt(oneTimeCosts)} (HW ${fmt(hardwareCost)} + Travel ${fmt(oneTimeTravel)} + Misc ${fmt(miscOnetime)}) • Ongoing: ${fmt(ongoingTotal)} (${fmt(ongoingMonthlyCost)}/mo × ${contractMonths})`;
-
-    $('profitTotal').textContent = (totalProfit>=0?fmt(totalProfit):'-'+fmt(Math.abs(totalProfit)));
-    $('profitNote').textContent = monthlyProfit>=0 ? `Approx. contribution: ${fmt(monthlyProfit)}/mo` : `Negative monthly contribution of ${fmt(Math.abs(monthlyProfit))}/mo`;
-
-    $('marginPct').textContent = pct(grossMargin);
-
-    $('mrr').textContent = fmt(mrr);
-    $('mrrNote').textContent = billPerTank ? `Billed per tank × ${numTanks}` : `Billed per facility`;
-
-    $('pm').textContent = fmt(monthlyProfit);
-    $('pmNote').textContent = `MRR ${fmt(mrr)} − Ongoing ${fmt(ongoingMonthlyCost)}/mo`;
-
-    $('breakeven').textContent = breakeven;
-    $('cac').textContent = fmt(oneTimeCosts);
-
-    // Notes
-    let notes = [];
-    if (travelPerTank<750 || travelPerTank>2200){
-      notes.push('Travel per tank outside typical $750–$2200 range.');
-    }
-    if (billPerTank && numTanks>1){
-      notes.push('MRR scales with tank count.');
-    }
-    if (!billPerTank && numTanks>1){
-      notes.push('Travel scales with tanks; monthly billed once per facility.');
-    }
-    if (totalProfit<0){
-      notes.push('Unprofitable over term; consider higher rate, longer term, or lower costs.');
-    } else if (grossMargin<0.3){
-      notes.push('Low margin; consider 3–5 year terms or adjust pricing.');
-    } else {
-      notes.push('Healthy margin scenario.');
-    }
-    $('notes').textContent = notes.join(' ');
-  }
-
-  function pulse(el){
-    el.animate([{transform:'scale(1)'},{transform:'scale(1.03)'},{transform:'scale(1)'}], {duration:200, easing:'ease-out'});
-  }
-
-  // Initial compute
-  compute();
-</script>
+  </script>
 </body>
 </html>
