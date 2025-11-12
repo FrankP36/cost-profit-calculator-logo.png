@@ -24,21 +24,21 @@
     font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, "Helvetica Neue", Arial, "Apple Color Emoji","Segoe UI Emoji";
     background: radial-gradient(1200px 800px at 80% -10%, #102340 0%, #0b1220 40%, #070c16 100%);
     color: var(--text);
-    position: relative;
   }
-
-  /* Logo */
-  .logo {
-    position: absolute;
-    top: 16px;
-    left: 150px;
-    height: 90px;
-    width: auto;
-  }
-
   header{
     padding: 24px 16px 8px;
     text-align:center;
+  }
+  header div.header-inner{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    flex-wrap:wrap;
+    justify-content:center;
+  }
+  header img{
+    height:50px;
+    width:auto;
   }
   h1{
     margin:0;
@@ -199,13 +199,14 @@
 </style>
 </head>
 <body>
-
-<!-- Logo -->
-<img src="logo.png" alt="DeTech Logo" class="logo">
-
 <header>
-  <h1>DeTech — Cost vs. Profit Margin Calculator</h1>
-  <p class="sub">Model hardware cost, onboarding travel cost per tank, and monthly subscription by contract term.</p>
+  <div class="header-inner">
+    <img src="logo.png" alt="DeTech Logo">
+    <div>
+      <h1>DeTech — Cost vs. Profit Margin Calculator</h1>
+      <p class="sub">Model hardware cost, onboarding travel cost per tank, and monthly subscription by contract term.</p>
+    </div>
+  </div>
 </header>
 
 <div class="container">
@@ -398,23 +399,21 @@
 
   function compute(){
     const hardwareCost = +$('hardwareCost').value || 0;
-    const numTanks     = Math.max(1, Math.floor(+$('numTanks').value || 0));
-    const travelPerTank= +$('travelPerTank').value || 0;
-    const billPerTank  = $('billPerTank').value === 'yes';
-    const monthlyRate  = +$('monthlyRate').value || 0;
+    const numTanks = Math.max(1, Math.floor(+$('numTanks').value || 0));
+    const travelPerTank = +$('travelPerTank').value || 0;
+    const billPerTank = $('billPerTank').value === 'yes';
+    const monthlyRate = +$('monthlyRate').value || 0;
     const contractMonths = Math.max(1, Math.floor(+$('contractMonths').value || 0));
     const cogsMonthlyPerTank = +$('cogsMonthlyPerTank').value || 0;
     const miscOnetime = +$('miscOnetime').value || 0;
 
     const mrr = billPerTank ? monthlyRate * numTanks : monthlyRate;
     const revenueTotal = mrr * contractMonths;
-
     const oneTimeTravel = travelPerTank * numTanks;
     const oneTimeCosts = hardwareCost + oneTimeTravel + miscOnetime;
     const ongoingMonthlyCost = cogsMonthlyPerTank * (billPerTank ? numTanks : 1);
     const ongoingTotal = ongoingMonthlyCost * contractMonths;
     const totalCosts = oneTimeCosts + ongoingTotal;
-
     const totalProfit = revenueTotal - totalCosts;
     const grossMargin = revenueTotal>0 ? (totalProfit / revenueTotal) : 0;
     const monthlyProfit = mrr - ongoingMonthlyCost;
@@ -426,32 +425,31 @@
     } else if (monthlyProfit === 0 && oneTimeCosts>0){
       breakeven = 'Never (no monthly contribution)';
     } else if (oneTimeCosts===0){
-      breakeven = '0 (no one-time costs)';
+      breakeven = '0 (already recovered)';
     }
 
+    $('mrr').textContent = fmt(mrr);
     $('revTotal').textContent = fmt(revenueTotal);
-    $('revBreakdown').textContent = `${fmt(mrr)} × ${contractMonths} months`;
+    $('revBreakdown').textContent = `${mrr} × ${contractMonths} months`;
     $('costTotal').textContent = fmt(totalCosts);
-    $('costBreakdown').textContent = `${fmt(oneTimeCosts)} one-time + ${fmt(ongoingTotal)} ongoing`;
+    $('costBreakdown').textContent = `${oneTimeCosts} one-time + ${ongoingTotal} ongoing`;
     $('profitTotal').textContent = fmt(totalProfit);
     $('marginPct').textContent = pct(grossMargin);
-    $('mrr').textContent = fmt(mrr);
     $('pm').textContent = fmt(monthlyProfit);
     $('breakeven').textContent = breakeven;
     $('cac').textContent = fmt(oneTimeCosts);
-    $('notes').textContent = billPerTank ? 'Monthly billed per tank' : 'Monthly billed per facility';
-    $('mrrNote').textContent = billPerTank ? `Per tank × ${numTanks}` : 'Per facility';
-    $('pmNote').textContent = `MRR minus monthly COGS`;
-    $('profitNote').textContent = `Revenue minus Total Costs`;
+    $('notes').textContent = 'Values updated.';
+    $('mrrNote').textContent = billPerTank ? 'Per tank revenue' : 'Per facility revenue';
+    $('pmNote').textContent = 'Monthly Profit = MRR − Monthly Costs';
+    $('profitNote').textContent = 'Profit = Revenue − Costs';
   }
 
   function pulse(el){
-    el.style.transform='scale(1.05)';
-    setTimeout(()=>el.style.transform='scale(1)',150);
+    el.style.transform = 'scale(1.1)';
+    setTimeout(()=>el.style.transform='',150);
   }
 
   compute();
 </script>
-
 </body>
 </html>
